@@ -15,13 +15,13 @@ useEffect(() => {
   }).catch(err => {
     console.log(err)
   })
-},[])
+},[props,urlId])
 const opts = {
   height: '390',
   width: '100%',
   playerVars: {
     // https://developers.google.com/youtube/player_parameters
-    autoplay: 0,
+    autoplay: 1,
   },
 };
 
@@ -30,12 +30,10 @@ const handleMovie = (id) => {
   axios.get(`/movie/${id}videos?api_key=${API_KEY}&language=en-US`).then(response=>{
     if(response.data.results.length!==0){
       setUrlId(response.data.results[0])
-      
+    
     }else{
       console.log("array empty")
     }
-  
-
 })
 }
   return (
@@ -43,12 +41,13 @@ const handleMovie = (id) => {
       <h1>{props.title}</h1>
       <div className="posters">      
         {
-          movies.map((obj)=> 
-        <img onClick={()=>handleMovie(obj.id)} className={props.isSmall ? 'small-poster': 'poster'} alt='poster' src={`${imageUrl+obj.backdrop_path}`} />          
+          movies.map((obj,index)=> 
+        <img onClick={()=>handleMovie(obj.id)} key={index} className={props.isSmall ? 'small-poster': 'poster'} alt='poster' src={`${imageUrl+obj.backdrop_path}`} />          
         )}
           
       </div> 
-  { urlId && <YouTube  opts={opts} videoId={urlId.key} /> } 
+      {console.log(urlId)}
+  { urlId &&  <YouTube  opts={opts} videoId={urlId.key} /> }
     </div>
   )
 }
